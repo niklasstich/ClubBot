@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountingBot", "CountingBot\CountingBot.csproj", "{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountingBotData", "CountingBotData\CountingBotData.csproj", "{1A051357-1F05-4ABB-91D3-01281CD0B1ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountingBotLogic", "CountingBotLogic\CountingBotLogic.csproj", "{2E85842B-998A-4D2C-9EFA-2F1005989494}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A051357-1F05-4ABB-91D3-01281CD0B1ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A051357-1F05-4ABB-91D3-01281CD0B1ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A051357-1F05-4ABB-91D3-01281CD0B1ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A051357-1F05-4ABB-91D3-01281CD0B1ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
