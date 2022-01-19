@@ -3,11 +3,21 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CountingBotLogic;
 
 public class CountingAdminModule : ModuleBase<SocketCommandContext>
 {
+    private readonly IDbContextFactory<CountingDbContext> _dbContextFactory;
+    private readonly ILogger _logger;
+
+    public CountingAdminModule(IDbContextFactory<CountingDbContext> dbContextFactory, ILogger<CountingAdminModule> logger)
+    {
+        _dbContextFactory = dbContextFactory;
+        _logger = logger;
+    }
+    
     [Command("register")]
     [Summary("Registers the channel for listening.")]
     [RequireContext(ContextType.Guild)]
@@ -15,9 +25,7 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
     public async Task RegisterAsync()
     {
-        //if (!IsUserAllowed(Context.User as SocketGuildUser)) return;
-        
-        await using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         if (await db.Channels.AnyAsync(ch => Context.Channel.Id == ch.GuildChannelId))
         {
             await ReplyAsync("This channel is already registered!");
@@ -42,7 +50,7 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
     public async Task UnregisterAsync()
     {
-        await using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
         if (channel == null)
         {
@@ -63,7 +71,7 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
     public async Task RestoreAsync([Summary("The count that is to be restored.")] int count)
     {
-        await using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
         if (channel == null)
         {
@@ -84,7 +92,7 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     public async Task RegisterBanrole(
         [Summary("The role that should be given when the count is failed.")] IRole banRole)
     {
-        await using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
         if (channel == null)
         {
@@ -105,7 +113,7 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     public async Task RegisterBanrole(
         [Summary("Should toggleban be True or False?")] bool toggle)
     {
-        await using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
         if (channel == null)
         {
@@ -130,7 +138,7 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [RequireContext(ContextType.Guild)]
     public async Task CurrentCountAsync()
     {
-        await using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
         if (channel == null)
         {

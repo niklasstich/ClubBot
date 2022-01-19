@@ -11,12 +11,15 @@ public class DiscordWorker : BackgroundService
     private readonly ILogger<DiscordWorker> _logger;
     private readonly DiscordSocketClient _client;
     private readonly CommandHandler _commandHandler;
+    private CountingDbInitializer? _dbInitializer;
 
-    public DiscordWorker(ILogger<DiscordWorker> logger, DiscordSocketClient client, CommandHandler commandHandler)
+    public DiscordWorker(ILogger<DiscordWorker> logger, DiscordSocketClient client, CommandHandler commandHandler,
+        CountingDbInitializer? dbInitializer)
     {
         _logger = logger;
         _client = client;
         _commandHandler = commandHandler;
+        _dbInitializer = dbInitializer;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,14 +28,13 @@ public class DiscordWorker : BackgroundService
         var discordToken = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
 
         _client.Log += Log;
-        /*
-    _client.Connected += () =>
-    {
-        _logger.LogInformation("Connected");
-        return Task.CompletedTask;
-    };
-    */
-        await new CountingDbContext().Database.EnsureCreatedAsync(stoppingToken);
+        _client.Connected += () =>
+        {
+            _logger.LogInformation("Connected to discord gateway.");
+            return Task.CompletedTask;
+        };
+        
+        await _dbInitializer?.InitializeDb()!;
         await _commandHandler.InstallCommandsAsync();
         
         await _client.LoginAsync(TokenType.Bot, discordToken);

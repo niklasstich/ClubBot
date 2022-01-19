@@ -21,6 +21,8 @@ internal static class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((_, services) =>
                 services
+                    .AddDbContextFactory<CountingDbContext>()
+                    .AddTransient<CountingDbInitializer>()
                     .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
                     {
                         #if DEBUG

@@ -12,17 +12,23 @@ public class CommandHandler
     private readonly DiscordSocketClient _client;
     private readonly CommandService _commands;
     private readonly CountingHandler _countingHandler;
-    public CommandHandler(DiscordSocketClient client, CommandService commands, CountingHandler countingHandler)
+    private readonly IServiceProvider _services;
+    private readonly IDbContextFactory<CountingDbContext> _dbContextFactory;
+
+    public CommandHandler(DiscordSocketClient client, CommandService commands, CountingHandler countingHandler, 
+        IServiceProvider services, IDbContextFactory<CountingDbContext> dbContextFactory)
     {
         _commands = commands;
         _client = client;
         _countingHandler = countingHandler;
+        _services = services;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task InstallCommandsAsync()
     {
         _client.MessageReceived += HandleCommandAsync;
-        await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), null);
+        await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), _services);
     }
 
     private async Task HandleCommandAsync(SocketMessage messageParam)
@@ -35,7 +41,7 @@ public class CommandHandler
         if (message.HasStringPrefix("~~", ref argPos))
         {
             var context = new SocketCommandContext(_client, message);
-            await _commands.ExecuteAsync(context, argPos, null);
+            await _commands.ExecuteAsync(context, argPos, _services);
             return;
         }
 
@@ -47,7 +53,7 @@ public class CommandHandler
 
     private async Task<bool> ChannelListened(ISocketMessageChannel messageChannel)
     {
-        using var db = new CountingDbContext();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         return await db.Channels.AnyAsync(ch => messageChannel.Id == ch.GuildChannelId);
     }
 
