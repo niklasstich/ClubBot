@@ -47,8 +47,6 @@ public class CommandHandler
 
         if (StartsWithNumber(message.Content) && await ChannelListened(message.Channel))
             await _countingHandler.HandleMessageAsync(message);
-        if (message.Content=="test")
-            await message.Channel.SendMessageAsync("peepoWtf");
     }
 
     private async Task<bool> ChannelListened(ISocketMessageChannel messageChannel)
