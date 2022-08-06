@@ -29,6 +29,17 @@ public class CountingHandler
                              $"in the database");
             return;
         }
+
+        if (message.Author is not SocketGuildUser user)
+        {
+            _logger.LogError("Can't cast message author to SocketGuildUser");
+            return;
+        }
+        if (channel.BannedUsers.Any(bannedUser => bannedUser.UserId == user.Id))
+        {
+            await message.ReplyAsync("You're banned, loser.");
+            return;
+        }
             
         var automata = new MathExpressionAutomata(message.Content);
         var filteredMessage = automata.ParseExpression();
@@ -41,7 +52,6 @@ public class CountingHandler
         }
         else
         {
-            //TODO: implement
             //failure, reset count and check if new highscore
             await HandleIncorrectCountAsync(message, channel, parsedNumber, filteredMessage, invalidExpression);
         }
@@ -71,21 +81,13 @@ public class CountingHandler
                                $"{count.CurrentCount+1} message {message.Content} filtered {filteredMessage} " +
                                $"evaluated {parsedNumber} invalidexpression {invalidExpression}");
         UpdateCount(message, count, currentTime, 0);
-        if (channel.BanRoleActive && channel.BanRoleId != 0)
+        if (channel.BanActive)
         {
-            var addRoleTask = (message.Author as SocketGuildUser)?.AddRoleAsync(
-                (message.Channel as SocketGuildChannel)?.Guild.GetRole(channel.BanRoleId));
-            if (addRoleTask != null)
+            if (message.Author is SocketGuildUser user)
             {
-                await addRoleTask;
-                response += " Get banned loser lol";
+                channel.BannedUsers.Add(new BannedUser(channel.ChannelId, user.Id));
             }
-            else
-            {
-                _logger.LogWarning(
-                    $"Failed to get addRoleTask for guildId {channel.GuildId} " +
-                    $"guildChannelId {channel.GuildChannelId} roleId {channel.BanRoleId}");
-            }
+            response += " Get banned loser lol";
         }
         await message.AddReactionAsync(new Emoji("❌"));
         await message.ReplyAsync(response);

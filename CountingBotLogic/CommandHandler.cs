@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
 using CountingBotData;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +11,15 @@ namespace CountingBotLogic;
 public class CommandHandler
 {
     private readonly DiscordSocketClient _client;
-    private readonly CommandService _commands;
+    private readonly CommandService _commandService;
     private readonly CountingHandler _countingHandler;
     private readonly IServiceProvider _services;
     private readonly IDbContextFactory<CountingDbContext> _dbContextFactory;
 
-    public CommandHandler(DiscordSocketClient client, CommandService commands, CountingHandler countingHandler, 
+    public CommandHandler(DiscordSocketClient client, CommandService commandService, CountingHandler countingHandler, 
         IServiceProvider services, IDbContextFactory<CountingDbContext> dbContextFactory)
     {
-        _commands = commands;
+        _commandService = commandService;
         _client = client;
         _countingHandler = countingHandler;
         _services = services;
@@ -28,7 +29,7 @@ public class CommandHandler
     public async Task InstallCommandsAsync()
     {
         _client.MessageReceived += HandleCommandAsync;
-        await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), _services);
+        await _commandService.AddModulesAsync(Assembly.GetExecutingAssembly(), _services);
     }
 
     private async Task HandleCommandAsync(SocketMessage messageParam)
@@ -41,7 +42,11 @@ public class CommandHandler
         if (message.HasStringPrefix("~~", ref argPos))
         {
             var context = new SocketCommandContext(_client, message);
-            await _commands.ExecuteAsync(context, argPos, _services);
+            var result = await _commandService.ExecuteAsync(context, argPos, _services);
+            if (!result.IsSuccess)
+            {
+                await message.ReplyAsync(result.ErrorReason);
+            }
             return;
         }
 

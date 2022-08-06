@@ -26,19 +26,19 @@ public class CountingDbContext : DbContext
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                _logger.LogInformation("Determined to be running in a windows container.");
+                _logger.LogDebug("Determined to be running in a windows container.");
                 return Path.Join("C:", "dbdata");
             }
 
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 throw new ApplicationException("Running in an OSX or BSD container is not supported.");
-            _logger.LogInformation("Determined to be running in a linux container.");
+            _logger.LogDebug("Determined to be running in a linux container.");
             if(!Directory.Exists(Path.Join("/", "dbdata"))) 
                 _logger.LogCritical("Path /dbdata does not exist, but needs to exist in order to persist" +
                                     " the database. Please rebuild the container with a volume mounted there.");
             return Path.Join("/", "dbdata");
         }
-        _logger.LogInformation($"Running on {RuntimeInformation.OSDescription}.");
+        _logger.LogDebug($"Running on {RuntimeInformation.OSDescription}.");
         return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     }
 
@@ -47,14 +47,24 @@ public class CountingDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        var bannedUserTypeBuilder = builder.Entity<BannedUser>();
+        bannedUserTypeBuilder.HasKey(user => user.BanId);
         var channelTypeBuilder = builder.Entity<Channel>();
         channelTypeBuilder
             .HasOne(ch => ch.Count)
             .WithOne(count => count.Channel)
             .HasForeignKey<Count>(count => count.ChannelId)
             .IsRequired(true);
+        channelTypeBuilder
+            .HasMany(ch => ch.BannedUsers)
+            .WithOne(user => user.Channel)
+            .IsRequired(true);
         
         channelTypeBuilder
-            .Navigation(ch => ch.Count).AutoInclude();
+            .Navigation(ch => ch.Count)
+            .AutoInclude();
+        channelTypeBuilder
+            .Navigation(ch => ch.BannedUsers)
+            .AutoInclude();
     }
 }

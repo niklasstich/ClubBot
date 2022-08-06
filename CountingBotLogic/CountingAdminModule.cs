@@ -21,8 +21,8 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [Command("register")]
     [Summary("Registers the channel for listening.")]
     [RequireContext(ContextType.Guild)]
-    [RequireOwner(Group = "permission")]
-    [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
+    [RequireOwner(Group = "AdminOrOwner")]
+    [RequireUserPermission(GuildPermission.Administrator, Group = "AdminOrOwner")]
     public async Task RegisterAsync()
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
@@ -46,8 +46,8 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [Command("unregister")]
     [Summary("Unregisteres the channel for listening.")]
     [RequireContext(ContextType.Guild)]
-    [RequireOwner(Group = "permission")]
-    [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
+    [RequireOwner(Group = "AdminOrOwner")]
+    [RequireUserPermission(GuildPermission.Administrator, Group = "AdminOrOwner")]
     public async Task UnregisterAsync()
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
@@ -67,8 +67,8 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
     [Command("restore")]
     [Summary("Restore a count in a channel.")]
     [RequireContext(ContextType.Guild)]
-    [RequireOwner(Group = "permission")]
-    [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
+    [RequireOwner(Group = "AdminOrOwner")]
+    [RequireUserPermission(GuildPermission.Administrator, Group = "AdminOrOwner")]
     public async Task RestoreAsync([Summary("The count that is to be restored.")] int count)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
@@ -84,33 +84,12 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
         await ReplyAsync($"Restored count to {count}, next number is {count + 1}!");
     }
 
-    [Command("registerbanrole")]
-    [Summary("Register a role as ban role")]
-    [RequireContext(ContextType.Guild)]
-    [RequireOwner(Group = "permission")]
-    [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
-    public async Task RegisterBanrole(
-        [Summary("The role that should be given when the count is failed.")] IRole banRole)
-    {
-        await using var db = await _dbContextFactory.CreateDbContextAsync();
-        var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
-        if (channel == null)
-        {
-            await ReplyAsync("This channel isn't being listened to!");
-            return;
-        }
-
-        channel.BanRoleId = banRole.Id;
-        await db.SaveChangesAsync();
-        await ReplyAsync($"Set role {banRole.Name} as banrole");
-    }
-
     [Command("toggleban")]
     [Summary("Toggles ban on fail.")]
     [RequireContext(ContextType.Guild)]
-    [RequireOwner(Group = "permission")]
-    [RequireUserPermission(GuildPermission.Administrator, Group = "permission")]
-    public async Task RegisterBanrole(
+    [RequireOwner(Group = "AdminOrOwner")]
+    [RequireUserPermission(GuildPermission.Administrator, Group = "AdminOrOwner")]
+    public async Task ToggleBan(
         [Summary("Should toggleban be True or False?")] bool toggle)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
@@ -121,15 +100,78 @@ public class CountingAdminModule : ModuleBase<SocketCommandContext>
             return;
         }
 
-        if (channel.BanRoleId == 0)
+        channel.BanActive = toggle;
+        await db.SaveChangesAsync();
+        await ReplyAsync($"Set ban on fail to {toggle}");
+    }
+
+    [Command("ban")]
+    [Summary("Bans a user from counting in the channel.")]
+    [RequireContext(ContextType.Guild)]
+    [RequireOwner(Group = "AdminOrOwner")]
+    [RequireUserPermission(GuildPermission.Administrator, Group = "AdminOrOwner")]
+    public async Task Ban(
+        [Summary("The user that should be banned.")]
+        SocketGuildUser user)
+    {
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
+        var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
+        if (channel == null)
         {
-            await ReplyAsync("Please set a banrole with `~~registerbanrole` first");
+            await ReplyAsync("Failed to get channel from db");
             return;
         }
 
-        channel.BanRoleActive = toggle;
-        await db.SaveChangesAsync();
-        await ReplyAsync($"Set ban on fail to {toggle}");
+        if (!channel.BannedUsers.Any(bannedUser =>
+                bannedUser.UserId == user.Id && bannedUser.ChannelId == channel.ChannelId))
+        {
+            channel.BannedUsers.Add(new BannedUser(channel.ChannelId, user.Id));
+        }
+
+        try
+        {
+            await db.SaveChangesAsync();
+            await ReplyAsync($"Banned user {user.DisplayName} from counting.");
+        }
+        catch (DbUpdateException dbex)
+        {
+            await ReplyAsync("Exception while updating DB: " + dbex.Message);
+        }
+    }
+    
+    [Command("unban")]
+    [Summary("Unbans a user from counting in the channel.")]
+    [RequireContext(ContextType.Guild)]
+    [RequireOwner(Group = "AdminOrOwner")]
+    [RequireUserPermission(GuildPermission.Administrator, Group = "AdminOrOwner")]
+    public async Task Unban(
+        [Summary("The user that should be unbanned.")]
+        SocketGuildUser user)
+    {
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
+        var channel = await db.Channels.FirstOrDefaultAsync(ch => Context.Channel.Id == ch.GuildChannelId);
+        if (channel == null)
+        {
+            await ReplyAsync("Failed to get channel from db");
+            return;
+        }
+
+        var banCount = channel.BannedUsers.RemoveAll(bannedUser =>
+            bannedUser.UserId == user.Id && bannedUser.ChannelId == channel.ChannelId);
+        if (banCount != 1)
+        {
+            await ReplyAsync($"Ban deletion yielded {banCount} results, but expected 1");
+        }
+
+        try
+        {
+            await db.SaveChangesAsync();
+            await ReplyAsync($"Unbanned user {user.DisplayName} from counting.");
+        }
+        catch (DbUpdateException dbex)
+        {
+            await ReplyAsync("Exception while updating DB: " + dbex.Message);
+        }
     }
     
 

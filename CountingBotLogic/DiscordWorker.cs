@@ -47,22 +47,22 @@ public class DiscordWorker : BackgroundService
         switch (msg.Severity)
         {
             case LogSeverity.Critical:
-                _logger.LogCritical(msg.Message);
+                _logger.LogCritical("{}", msg.Message);
                 break;
             case LogSeverity.Error:
-                _logger.LogError(msg.Message);
+                _logger.LogError("{}", msg.Message);
                 break;
             case LogSeverity.Warning:
-                _logger.LogWarning(msg.Message);
+                _logger.LogWarning("{}", msg.Message);
                 break;
             case LogSeverity.Info:
-                _logger.LogInformation(msg.Message);
+                _logger.LogInformation("{}", msg.Message);
                 break;
             case LogSeverity.Verbose:
-                _logger.LogDebug(msg.Message);
+                _logger.LogDebug("{}", msg.Message);
                 break;
             case LogSeverity.Debug:
-                _logger.LogTrace(msg.Message);
+                _logger.LogTrace("{}", msg.Message);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(msg), "unknown LogSeverity level " + msg.Severity);
