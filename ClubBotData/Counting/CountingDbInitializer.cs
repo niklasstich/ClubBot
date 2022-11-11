@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace CountingBotData;
+namespace ClubBotData;
 
 public class CountingDbInitializer
 {

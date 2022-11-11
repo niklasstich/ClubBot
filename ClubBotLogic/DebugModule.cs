@@ -1,7 +1,6 @@
-using Discord;
 using Discord.Commands;
 
-namespace CountingBotLogic;
+namespace ClubBotLogic;
 
 public class DebugModule : ModuleBase<SocketCommandContext>
 {

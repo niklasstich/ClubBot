@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountingBot", "CountingBot\CountingBot.csproj", "{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubBot", "ClubBot\ClubBot.csproj", "{83DF88DF-9EEC-4424-A1DB-50DE97C36A2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountingBotData", "CountingBotData\CountingBotData.csproj", "{1A051357-1F05-4ABB-91D3-01281CD0B1ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubBotData", "ClubBotData\ClubBotData.csproj", "{1A051357-1F05-4ABB-91D3-01281CD0B1ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountingBotLogic", "CountingBotLogic\CountingBotLogic.csproj", "{2E85842B-998A-4D2C-9EFA-2F1005989494}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubBotLogic", "ClubBotLogic\ClubBotLogic.csproj", "{2E85842B-998A-4D2C-9EFA-2F1005989494}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

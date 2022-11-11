@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
-using CountingBotData;
+using ClubBotData;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 
-namespace CountingBotLogic;
+namespace ClubBotLogic;
 
 public class CommandHandler
 {

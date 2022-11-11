@@ -1,10 +1,10 @@
-using CountingBotLogic;
+using ClubBotData;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace CountingBotData;
+namespace ClubBotLogic;
 
 public class DiscordWorker : BackgroundService
 {

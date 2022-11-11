@@ -1,4 +1,4 @@
-namespace CountingBotData;
+namespace ClubBotData;
 
 public class Count
 {

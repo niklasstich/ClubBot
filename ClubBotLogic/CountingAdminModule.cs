@@ -1,11 +1,11 @@
-using CountingBotData;
+using ClubBotData;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace CountingBotLogic;
+namespace ClubBotLogic;
 
 public class CountingAdminModule : ModuleBase<SocketCommandContext>
 {

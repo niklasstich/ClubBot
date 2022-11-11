@@ -1,4 +1,4 @@
-namespace CountingBotLogic;
+namespace ClubBotLogic;
 
 public class MathExpressionAutomata
 {

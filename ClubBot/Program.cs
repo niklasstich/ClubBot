@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using CountingBotData;
-using CountingBotLogic;
+using ClubBotData;
+using ClubBotLogic;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
-namespace CountingBot;
+namespace ClubBot;
 
 internal static class Program
 {

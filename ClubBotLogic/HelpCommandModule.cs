@@ -2,7 +2,7 @@ using System.Text;
 using Discord;
 using Discord.Commands;
 
-namespace CountingBotLogic;
+namespace ClubBotLogic;
 
 public class HelpCommandModule : ModuleBase<SocketCommandContext>
 {
