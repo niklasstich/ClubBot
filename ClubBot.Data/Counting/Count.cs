@@ -1,4 +1,5 @@
-namespace ClubBotData;
+
+namespace ClubBot.Data.Counting;
 
 public class Count
 {
@@ -9,7 +10,5 @@ public class Count
     public ulong? MaxUserId { get; set; }
     public DateTime LastCountTime { get; set; }
     public DateTime MaxCountTime { get; set; }
-    
-    public int ChannelId { get; set; }
-    public Channel Channel { get; set; }
+    public CountSettings CountSettings { get; set; }
 }

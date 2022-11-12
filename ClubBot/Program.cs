@@ -1,14 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using ClubBotData;
-using ClubBotLogic;
+using ClubBot.Data.Counting;
+using ClubBot.Logic.Common;
+using ClubBot.Logic.Counting;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace ClubBot;
 
@@ -30,7 +30,7 @@ internal static class Program
                         #else 
                         LogLevel = LogSeverity.Info,
                         #endif
-                        GatewayIntents = GatewayIntents.AllUnprivileged,
+                        GatewayIntents = GatewayIntents.MessageContent | (GatewayIntents.AllUnprivileged & ~GatewayIntents.GuildScheduledEvents & ~GatewayIntents.GuildInvites),
                         
                     }))
                     .AddSingleton<CommandService>()
@@ -40,7 +40,7 @@ internal static class Program
                     {
                         builder.ClearProviders();
                         builder.SetMinimumLevel(LogLevel.Trace);
-                        builder.AddNLog();
+                        builder.AddConsole();
                     })
                     .AddHostedService<DiscordWorker>());
 }

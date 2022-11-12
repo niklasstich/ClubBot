@@ -1,8 +1,9 @@
 using System.Text;
+using ClubBot.Logic.Attributes;
 using Discord;
 using Discord.Commands;
 
-namespace ClubBotLogic;
+namespace ClubBot.Logic.Common;
 
 public class HelpCommandModule : ModuleBase<SocketCommandContext>
 {

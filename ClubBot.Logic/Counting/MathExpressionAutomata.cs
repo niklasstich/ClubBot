@@ -1,4 +1,4 @@
-namespace ClubBotLogic;
+namespace ClubBot.Logic.Counting;
 
 public class MathExpressionAutomata
 {

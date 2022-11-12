@@ -1,6 +1,6 @@
 using Discord.Commands;
 
-namespace ClubBotLogic;
+namespace ClubBot.Logic.Attributes;
 
 public class CooldownAttribute : PreconditionAttribute
 {

@@ -1,12 +1,13 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
-using ClubBotData;
+using ClubBot.Data.Counting;
+using ClubBot.Logic.Counting;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClubBotLogic;
+namespace ClubBot.Logic.Common;
 
 public class CommandHandler
 {
@@ -28,11 +29,11 @@ public class CommandHandler
 
     public async Task InstallCommandsAsync()
     {
-        _client.MessageReceived += HandleCommandAsync;
+        _client.MessageReceived += HandleMessageAsync;
         await _commandService.AddModulesAsync(Assembly.GetExecutingAssembly(), _services);
     }
 
-    private async Task HandleCommandAsync(SocketMessage messageParam)
+    private async Task HandleMessageAsync(SocketMessage messageParam)
     {
         if (messageParam is not SocketUserMessage message) return;
 
@@ -50,14 +51,14 @@ public class CommandHandler
             return;
         }
 
-        if (StartsWithNumber(message.Content) && await ChannelListened(message.Channel))
-            await _countingHandler.HandleMessageAsync(message);
+        if (StartsWithNumber(message.Content) && await ChannelListenedAsync(message.Channel))
+            await _countingHandler.HandleCountMessageAsync(message);
     }
 
-    private async Task<bool> ChannelListened(ISocketMessageChannel messageChannel)
+    private async Task<bool> ChannelListenedAsync(ISocketMessageChannel messageChannel)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
-        return await db.Channels.AnyAsync(ch => messageChannel.Id == ch.GuildChannelId);
+        return await db.CountSettings.AnyAsync(cs => cs.Channel.GuildChannelId == messageChannel.Id && cs.CountingActive);
     }
 
     private static bool StartsWithNumber(string message) => Regex.IsMatch(message, @"^\d+");

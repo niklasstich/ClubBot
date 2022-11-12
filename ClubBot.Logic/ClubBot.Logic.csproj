@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>ClubBot.Logic</AssemblyName>
+        <RootNamespace>ClubBot.Logic</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Discord.Net.Commands" Version="3.8.1" />
+      <PackageReference Include="Discord.Net.WebSocket" Version="3.8.1" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ClubBot.Data\ClubBot.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="AoC" />
+    </ItemGroup>
+
+</Project>

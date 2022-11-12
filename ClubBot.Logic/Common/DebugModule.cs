@@ -1,6 +1,7 @@
+using ClubBot.Logic.Attributes;
 using Discord.Commands;
 
-namespace ClubBotLogic;
+namespace ClubBot.Logic.Common;
 
 public class DebugModule : ModuleBase<SocketCommandContext>
 {

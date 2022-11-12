@@ -1,10 +1,10 @@
-using ClubBotData;
+using ClubBot.Data.Counting;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace ClubBotLogic;
+namespace ClubBot.Logic.Common;
 
 public class DiscordWorker : BackgroundService
 {
@@ -30,7 +30,7 @@ public class DiscordWorker : BackgroundService
         _client.Log += Log;
         _client.Connected += () =>
         {
-            _logger.LogInformation("Connected to discord gateway.");
+            _logger.LogInformation("Connected to discord gateway");
             return Task.CompletedTask;
         };
         

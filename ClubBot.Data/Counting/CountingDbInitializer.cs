@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ClubBotData;
+namespace ClubBot.Data.Counting;
 
 public class CountingDbInitializer
 {
@@ -21,7 +21,7 @@ public class CountingDbInitializer
         {
             await using var db = await _factory.CreateDbContextAsync();
             await db.Database.EnsureCreatedAsync();
-            _logger.LogTrace("Initialized Db via EnsureCreatedAsync.");
+            _logger.LogTrace("Initialized Db via EnsureCreatedAsync");
         }
     }
 }
