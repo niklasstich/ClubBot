@@ -19,8 +19,4 @@
       <ProjectReference Include="..\ClubBot.Data\ClubBot.Data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="AoC" />
-    </ItemGroup>
-
 </Project>

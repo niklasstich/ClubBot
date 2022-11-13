@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubBot.Data", "ClubBot.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubBot.Logic", "ClubBot.Logic\ClubBot.Logic.csproj", "{2E85842B-998A-4D2C-9EFA-2F1005989494}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubBot.Test", "ClubBot.Test\ClubBot.Test.csproj", "{734B9CD2-C439-4CA7-B417-B9FA5CF620F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E85842B-998A-4D2C-9EFA-2F1005989494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{734B9CD2-C439-4CA7-B417-B9FA5CF620F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734B9CD2-C439-4CA7-B417-B9FA5CF620F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734B9CD2-C439-4CA7-B417-B9FA5CF620F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734B9CD2-C439-4CA7-B417-B9FA5CF620F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
